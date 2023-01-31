@@ -1,4 +1,4 @@
-package com.luiz.cursojava.aula36Extra.exercicios;
+package com.luiz.cursojava.aula36Extra.exercicio1;
 
 import java.util.Scanner;
 
