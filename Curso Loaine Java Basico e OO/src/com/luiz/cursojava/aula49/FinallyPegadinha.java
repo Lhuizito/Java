@@ -14,9 +14,10 @@ public class FinallyPegadinha {
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("Posicao do array invalida!");
                 System.exit(0);
-            } finally {
+            } finally { // não sera executado
                 System.out.println("Linha impressa apos o try ou catch");
             }
+
         }
     }
 }
