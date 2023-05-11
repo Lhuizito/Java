@@ -24,10 +24,10 @@ public class ConversorDatas {
         StringBuilder strBuilderFormatado = new StringBuilder();
         strBuilderFormatado.append(yy).append(mm).append(dd);
 
-        // conversao da String padrao dd/mm/yy para yy/mm/yyyy
+        // conversão da String padrão dd/mm/yy para yy/mm/yyyy
         String anoFormatadoAmericano = strBuilderFormatado.toString();
 
-        // conversao paraLocalDate
+        // conversão paraLocalDate
         LocalDate data = LocalDate.parse(anoFormatadoAmericano, DateTimeFormatter.BASIC_ISO_DATE);
 
         return data;
