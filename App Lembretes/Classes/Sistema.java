@@ -1,34 +1,126 @@
 package Classes;
 
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.TreeMap;
+
+import Utils.ConversorDatas;
 
 public class Sistema {
 
-    // atributo
-    private TreeMap<LocalDate, Lembrete> mapListas = new TreeMap<LocalDate, Lembrete>(); // <= teste
-    // private TreeMap<LocalDate, ArrayList<Lembrete>> mapLembretes = new
-    // TreeMap<LocalDate, ArrayList<Lembrete>>();
+    // armazenamento de informações
+    private TreeMap<LocalDate, ArrayList<Lembrete>> mapLembretes = new TreeMap<LocalDate, ArrayList<Lembrete>>();
 
+    // construtor
     public Sistema() {
     }
 
+    // métodos do sistema
+
+    /**
+     * Recebe um lembrete e o armazena.
+     * <p>
+     * Caso ja exista um dia para a data ela ser adicionada nesse dia. Caso não
+     * exista uma data um novo dia sera criado.
+     * 
+     * @param lembrete
+     */
     public void adicionarLembrete(Lembrete lembrete) {
 
         LocalDate dataChave = lembrete.getData();
 
-        mapListas.put(dataChave, lembrete);
+        if (!mapLembretes.containsKey(dataChave)) {
+            ArrayList<Lembrete> dia = new ArrayList<Lembrete>(); // cria novo dia
+            mapLembretes.put(dataChave, dia); // adiciona novo dia
+            mapLembretes.get(dataChave).add(lembrete); // adiciona lembrete ao dia criado
+        } else {
+            mapLembretes.get(dataChave).add(lembrete);
+        }
+
+        System.out.println("Lembrete adicionado a lista!");
     }
 
-    public void funcionaPrintPFVR() {
-        System.out.println("Printando");
-        System.out.println("\nPrintando");
-        System.out.println("\nPrintando\n");
+    /**
+     * Recebe uma data existente no sistema e o numero do lembrete especificado no
+     * dia que ele foi criado e remove da lista.
+     * 
+     * @param data           LocalDate
+     * @param numeroLembrete int
+     */
+    public void remocaoLembrete(LocalDate data, int numeroLembrete) {
 
-        for (Map.Entry<LocalDate, Lembrete> m : mapListas.entrySet()) {
-            System.out.println(m.getKey() + "\n" + m.getValue());
+        ArrayList<Lembrete> listaDiaAtual = null;
+
+        if (mapLembretes.isEmpty()) {
+            System.out.println("Erro: Não possui nenhum lembrete armazenado para remoção!");
+        } else if (!mapLembretes.containsKey(data)) {
+            System.out.println("Erro: A data não condiz com nenhum lembrete no sistema!");
+        } else {
+
+            listaDiaAtual = mapLembretes.get(data);
+
+            if ((numeroLembrete - 1) > listaDiaAtual.size()) {
+                System.out.println("O numero de lembrete não existe!");
+            } else if (listaDiaAtual.size() == 1) {// correção para evitar OutOfBounds
+                mapLembretes.remove(mapLembretes.firstKey());
+                System.out.println("Lembrete removido com sucesso.");
+            } else {
+                listaDiaAtual.remove(numeroLembrete - 1); // numeroLembrete -1 porque o usuário ve começando com 1
+                System.out.println("Lembrete removido com sucesso.");
+            }
+
+            System.out.println("\n\nPritando a porra do mapa td: " + mapLembretes.keySet());
         }
+
+    }
+
+    /**
+     * Lista todos dias presentes em todas listas de dia.
+     */
+    public void listarLembretes() {
+
+        if (mapLembretes.isEmpty())
+            System.out.println("Ainda não possui lembretes!");
+
+        for (LocalDate diaAtual : mapLembretes.keySet()) {
+
+            // variaveis
+            ArrayList<Lembrete> listaDiaAtual = null;
+            LocalDate dataDiaAtual = null;
+            int index = 0;
+            int numeroDoLembrete = 1;
+            String dataFormatada = null;
+
+            // abstração de informações
+
+            // pega o valor da chave do mapa (lista de lembretes de um dia)
+            listaDiaAtual = mapLembretes.get(diaAtual);
+            // pega a LocalDate bruta no formato (yyy/MM/yy) dos lembretes do array
+            dataDiaAtual = listaDiaAtual.get(index).getData();
+            // transforma a LocalDate bruta em String no formato (dd/MM/yy)
+            dataFormatada = ConversorDatas.localDateParaStringPadraoBrasil(dataDiaAtual);
+
+            index++; // muda o index da lista acessada na proxima iteração
+
+            System.out.println("--------------LEMBRETES DO DIA " + dataFormatada + "-----------");
+
+            // mostra o método toString por padrão Java de todos objetos Lembrete iterados
+            for (Lembrete listaDoDia : listaDiaAtual) {
+                System.out.println("\nLembrete numero: " + numeroDoLembrete++);
+                System.out.println(listaDoDia + "\n");
+            }
+
+            System.out.println("----------------------FIM DO DIA--------------------");
+        }
+    }
+
+    /**
+     * Retorna q quantidade de dias únicos no sistema.
+     * 
+     * @return int
+     */
+    public int tamanhoArmazenamento() {
+        return mapLembretes.size();
     }
 
 }
